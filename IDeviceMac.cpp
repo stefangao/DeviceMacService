@@ -1,32 +1,26 @@
 #include "IDeviceMac.h"
- 
+
 namespace android {
- 
-class BpDeviceMac : public BpInterface<IDeviceMac> {
- 
-public:
-    BpDeviceMac(const sp<IBinder>& impl) : BpInterface<IDeviceMac>(impl)
-    {
-    }
- 
-    int setBTMac(String8 bt) {
-        LOGI("Bp setBT");
-        Parcel data, reply;
-        data.writeInterfaceToken(IDeviceMac::getInterfaceDescriptor());
-        data.writeString8(bt);
-        remote()->transact(SET_BT_MAC, data, &reply);
-        return reply.readInt32();
-    }
- 
-    String8 getBTMac() {
-        LOGI("Bp getBT");
-        Parcel data, reply;
-        data.writeInterfaceToken(IDeviceMac::getInterfaceDescriptor());
-        remote()->transact(GET_BT_MAC, data, &reply);
-        return reply.readString8();
-    }
-};
- 
+//-------------BpDeviceMac--------
+int BpDeviceMac::setBTMac(String8 bt) 
+{
+    LOGI("Bp setBT");
+    Parcel data, reply;
+    data.writeInterfaceToken(IDeviceMac::getInterfaceDescriptor());
+    data.writeString8(bt);
+    remote()->transact(SET_BT_MAC, data, &reply);
+    return reply.readInt32();
+}
+
+String8 BpDeviceMac::getBTMac()
+{
+    LOGI("Bp getBT");
+    Parcel data, reply;
+    data.writeInterfaceToken(IDeviceMac::getInterfaceDescriptor());
+    remote()->transact(GET_BT_MAC, data, &reply);
+    return reply.readString8();
+}
+
 IMPLEMENT_META_INTERFACE(DeviceMac, "DeviceMac");
 /* Macro above expands to code below.
 const android::String16 IDeviceMac::descriptor("DeviceMac");
@@ -44,9 +38,8 @@ android::sp<IDeviceMac> IDeviceMac::asInterface(const android::sp<android::IBind
     return intr;
 }
 */
- 
-//---------------------------------------------------
- 
+
+//-------------BnDeviceMac--------
 status_t BnDeviceMac::onTransact(uint32_t code, const Parcel& data, Parcel* reply, uint32_t flags)
 {
     CHECK_INTERFACE(IDeviceMac, data, reply);
@@ -62,5 +55,5 @@ status_t BnDeviceMac::onTransact(uint32_t code, const Parcel& data, Parcel* repl
             return BBinder::onTransact(code, data, reply, flags);
     }
 }
- 
-} // end namespace android
+
+} //end namespace android
